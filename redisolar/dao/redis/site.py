@@ -41,4 +41,12 @@ class SiteDaoRedis(SiteDaoBase, RedisDaoBase):
         site_hashes = []  # type: ignore
         # END Challenge #1
 
+        client = self.redis
+        site_ids = client.smembers(self.key_schema.site_ids_key())
+
+        for site_id in site_ids:
+            hash_key = self.key_schema.site_hash_key(site_id)
+            site_hash = client.hgetall(hash_key)
+            site_hashes.append(site_hash)
+
         return {FlatSiteSchema().load(site_hash) for site_hash in site_hashes}
