@@ -1,0 +1,14 @@
+{
+    "python.linting.flake8Enabled": true,
+    "python.linting.enabled": true,
+    "swaggerViewer.previewInBrowser": true,
+    "swaggerViewer.defaultPort": 9002,
+    "python.testing.pytestArgs": [
+        "tests",
+        "-s"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.nosetestsEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "python.languageServer": "Jedi"
+}

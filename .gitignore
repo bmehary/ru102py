@@ -14,7 +14,7 @@ dist/
 *.egg-info/
 npm-debug.log
 
-.vscode
+#.vscode
 .idea/
 
 .env

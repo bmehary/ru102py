@@ -1,12 +1,42 @@
-version: "3"
+# this file is for local development only and is not used in the build pipeline
+version: '3.7'
 services:
-  test:
-    container_name: test
-    build: .
+  api:
+    user: root
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # installs development packages
+        - PYTHON_REQ_FILE=requirements-dev.txt
+    ports:
+      - '5000:5000' # default flask port
+      - '9001:9001' # python debugger port
+      - '9002:9002' # swagger viewer port
+      - '8001:8001' # redisolar port
+    tty: true
+    stdin_open: true
+    #env_file: .env
+    environment:
+      # should allow for AWS_PROFILE=<whatever> docker-compose up
+      - AWS_PROFILE=${AWS_PROFILE:-default}
+      # set the default env to load secrets for
+      - CHAMBER_ENV=dev
+    volumes:
+      # pass through code, aws credentials, and ssh dirs
+      - ./:/app/
+      - ~/.aws:/root/.aws/
+    networks:
+      - redis-net
     depends_on:
       - redis
-
+  
   redis:
     container_name: redis
     image: redislabs/redistimeseries
     restart: always
+    networks:
+      - redis-net
+
+networks:
+  redis-net:

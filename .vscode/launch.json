@@ -1,0 +1,47 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Flask",
+            "type": "python",
+            "request": "launch",
+            "module": "flask",
+            "env": {
+                "FLASK_APP": "redisolar",
+                "FLASK_ENV": "development",
+                //"FLASK_DEBUG": "0",
+                "FLASK_DEBUG": "1",
+                "AWS_PROFILE": "motoshop"
+            },
+            "args": [
+                "run",
+                "--host",
+                "0.0.0.0",
+                "--port",
+                "8001",
+                "--no-debugger",
+                //"--no-reload"
+            ],
+            "justMyCode": true,
+            "jinja": true
+        },
+        {
+            "name": "Python: Websockets",
+            "type": "python",
+            "request": "launch",
+            "program": "/usr/local/bin/gunicorn",
+            "gevent": true,
+            "justMyCode": true,
+            "args": ["-k", "flask_sockets.worker", "--chdir", "src/api", "app:app", "--bind=0.0.0.0:9001", "--timeout=7200", "--reload"]
+        },
+        {
+            "name": "Exports",
+            "type": "python",
+            "request": "launch",
+            "module": "src.tasks.run",
+            "args": [
+                "exports"
+            ]
+        }
+    ]
+}

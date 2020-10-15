@@ -1,0 +1,11 @@
+# this file is for local development only and is not used in the build pipeline
+version: '3.7'
+services:
+  api:
+    volumes:
+      - ~/.gitconfig:/root/.gitconfig
+      - ~/.ssh:/root/.ssh/
+    
+    # TODO: Comment out this command when gunicorn fix is released.
+    # Overrides default command so things don't shut down after the process ends.
+    command: /bin/sh -c "while sleep 1000; do :; done"
