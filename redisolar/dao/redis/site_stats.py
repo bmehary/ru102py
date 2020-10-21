@@ -63,14 +63,15 @@ class SiteStatsDaoRedis(SiteStatsDaoBase, RedisDaoBase):
         # START Challenge #3
 
         reporting_time = datetime.datetime.utcnow().isoformat()
+
         pipeline.hset(key, SiteStats.LAST_REPORTING_TIME, reporting_time)
         pipeline.hincrby(key, SiteStats.COUNT, 1)
         pipeline.expire(key, WEEK_SECONDS)
 
-        lua_script = CompareAndUpdateScript(self.redis)
+        lua_script = self.compare_and_update_script
         lua_script.update_if_greater(pipeline, key, SiteStats.MAX_WH, meter_reading.wh_generated)
         lua_script.update_if_less(pipeline, key, SiteStats.MIN_WH, meter_reading.wh_generated)
-        lua_script.update_if_greater(pipeline, key, SiteStats.MAX_CAPACITY, meter_reading.wh_generated)
+        lua_script.update_if_greater(pipeline, key, SiteStats.MAX_CAPACITY, meter_reading.current_capacity)
 
         # END Challenge #3
 
